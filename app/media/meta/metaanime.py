@@ -171,6 +171,8 @@ class MetaAnime(MetaBase):
 
         _anime_sub = r"\.sc|\.tc|\.jp|\.jpsc|\.tcsc|\.sctc|\.jptc|\.zh|\.en|\.chs|\.cht"
 
+        _md5_hash = r"\([0-9a-f]{5,}\)"
+
         if not title:
             return title
         # 所有【】换成[]
@@ -195,6 +197,9 @@ class MetaAnime(MetaBase):
         title = re.sub(r'\[4k]', '2160p', title, flags=re.IGNORECASE)
         # 处理ch，cn等被识别成name的情况
         title = re.sub(_anime_sub, '', title, flags=re.IGNORECASE)
+        # 处理一些组在文件名中加入hash的命名
+        # 例: '[SumiSora&MAGI_ATELIER][Kara_no_Kyoukai][BDRip][08][x264_1080p][flac_6ch](E3266A4F).ass'
+        title = re.sub(_md5_hash, '', title, flags=re.IGNORECASE)
         # 处理/分隔的中英文标题
         names = title.split("]")
         if len(names) > 1 and title.find("- ") == -1:

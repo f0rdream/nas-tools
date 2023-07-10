@@ -49,6 +49,9 @@ class MetaVideo(MetaBase):
     _video_encode_re = r"^[HX]26[45]$|^AVC$|^HEVC$|^VC\d?$|^MPEG\d?$|^Xvid$|^DivX$|^HDR\d*$"
     _audio_encode_re = r"^DTS\d?$|^DTSHD$|^DTSHDMA$|^Atmos$|^TrueHD\d?$|^AC3$|^\dAudios?$|^DDP\d?$|^DD\d?$|^LPCM\d?$|^AAC\d?$|^FLAC\d?$|^HD\d?$|^MA\d?$"
 
+    # Remving hash part in the filename
+    _md5_hash = r"\([0-9a-f]{5,}\)"
+
     def __init__(self, title, subtitle=None, fileflag=False):
         super().__init__(title, subtitle, fileflag)
         if not title:
@@ -71,6 +74,10 @@ class MetaVideo(MetaBase):
         title = re.sub(r'[0-9.]+\s*[MGT]i?B(?![A-Z]+)', "", title, flags=re.IGNORECASE)
         # 把年月日去掉
         title = re.sub(r'\d{4}[\s._-]\d{1,2}[\s._-]\d{1,2}', "", title)
+        # 处理一些组在文件名中加入hash的命名
+        # 例: '[SumiSora&MAGI_ATELIER][Kara_no_Kyoukai][BDRip][08][x264_1080p][flac_6ch](E3266A4F).ass'
+        title = re.sub(self._md5_hash, '', title, flags=re.IGNORECASE)
+
         # 拆分tokens
         tokens = Tokens(title)
         self.tokens = tokens

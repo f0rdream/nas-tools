@@ -598,8 +598,8 @@ class FileTransfer:
                     success_flag = False
                     error_message = "无法识别媒体信息"
                     self.progress.update(ptype="filetransfer", text=error_message)
-                    if udf_flag:
-                        return __finish_transfer(success_flag, error_message)
+                    # if udf_flag:
+                    #     return __finish_transfer(success_flag, error_message)
                     # 记录未识别
                     is_need_insert_unknown = self.dbhelper.is_need_insert_transfer_unknown(reg_path)
                     if is_need_insert_unknown:
